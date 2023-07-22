@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "848721073400",
+    "project_id": "fryta-5b05f",
+    "storage_bucket": "fryta-5b05f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848721073400:android:d9950418cca771fc94970d",
+        "android_client_info": {
+          "package_name": "com.example.fryta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848721073400-000uom8jb2f9ddj5vg44c63f2tf8nnkq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwt-xZXaW-cLScCKw7cXNmjIrT2xZjLUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848721073400-000uom8jb2f9ddj5vg44c63f2tf8nnkq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "848721073400-9kg6r7bol14jgb0k1q2g95pvlaqkmkrn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fryta"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
