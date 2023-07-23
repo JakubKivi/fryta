@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
 
-void main() {
+int counter = 0; 
+int toChange = 0;
+
+TextEditingController textController = TextEditingController(text: "Initial Text");
+
+int gender = -1;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
   runApp(const Fryta());
 }
 
 class Fryta extends StatelessWidget {
+  
   const Fryta({super.key});
 
   // This widget is the root of your application.
@@ -30,6 +46,7 @@ class Fryta extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 148, 244, 221)
       ),
       home: const MyHomePage(title: 'Fryta'),
     );
@@ -55,17 +72,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   // var db = FirebaseFirestore.instance;
-  void _incrementCounter() {
+  
+  void _genderSwap(){
+    if(gender==1){gender = 0;}
+    else{ gender = 1;}
+    print(gender);
+  }
+
+  void _incrementCounter(int ile) {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      
+      // counter = GetFryty("Frytki");
+      String data_liczba = (counter+ile).toString();
+      final data = <String, String>{
+        "Liczba": data_liczba
+      };
+      firestore.collection("Frytki").doc("Frytki").set(data).onError((e, _)=>print("error"));
+      // firestore.collection("Frytki").doc("Frytki").set
+
     });
+    
   }
 
   @override
@@ -86,7 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: 
+      
+      Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -105,25 +140,259 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              'assets/fry.jpg',
-              height: 300,
-              width: 300),
-            const Text(
-              'Baba wisi tyle Fryt:',
+            TextField(
+              controller: textController,
+              
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                
+                filled: true,
+                fillColor: Color(0xfff5c754),
+                hintText: 'Podaj liczbe zakładu',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineLarge ,
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xffd39b0f),
+                            Color(0xfff5c754),
+                            Color(0xffffde8b),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 148, 244, 221),
+                      padding: const EdgeInsets.all(10.0),
+                      textStyle: const TextStyle(fontSize: 30),
+                    ),
+                    onPressed: ()=>_incrementCounter(int.parse(textController.text)),
+                    child: const Text('Chopek wygrał zakład'),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xffd39b0f),
+                            Color(0xfff5c754),
+                            Color(0xffffde8b),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 148, 244, 221),
+                      padding: const EdgeInsets.all(10.0),
+                      textStyle: const TextStyle(fontSize: 30),
+                    ),
+                    onPressed: ()=>_incrementCounter(-int.parse(textController.text)),
+                    child: const Text('Baba wygrała zakład'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Text(
+            //   ((){
+            //     if(gender==1){ return 'Baba wisi tyle Fryt:'+ '$gender';}
+            //     else{ return 'Chopek wisi tyle Fryt'+ '$gender';}}
+            //     ())
+            //     ,
+            //   style: const TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.deepOrange,
+            //     fontSize: 30
+            //     ),
+            // ),
+            const TextChanger(),
+            
+            
+            // Text(
+            //   '$counter',
+            //   style: Theme.of(context).textTheme.headlineLarge ,
+            // ),
+            
+            // GetFryty("Frytki"),
+            // CheckFryty()
+              
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Dodaj Fryte',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      
+       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class TextChanger extends StatefulWidget {
+  const TextChanger({super.key});
+  @override
+  State<TextChanger> createState() => _TextChangerState();
+}
+class _TextChangerState extends State<TextChanger> {
+  // Declare the variable
+  String dynamicText = 'Baba wisi tyle frytek:';
+  updateText() {
+    setState(() {
+      if(gender==-1){
+        dynamicText = 'Chopek wisi tyle frytek';
+        gender=1;
+      }else{
+        dynamicText = 'Baba wisi tyle frytek:';
+        gender=-1;
+      }
+      
+      // Replace with your logic
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          dynamicText, // Dynamic text
+          style: const TextStyle(fontSize: 28),
+        ),
+        Image.asset(
+              'assets/fry.jpg',
+              height: 200,
+              width: 500),
+        contFrytki(),
+        ElevatedButton(
+          child: const Text('Zmień płeć'),
+          onPressed: () => updateText(), // Call the method
+        ),
+      ],
+    );
+  }
+}
+
+class contFrytki extends StatefulWidget {
+  @override
+  _contFrytkiState createState() => _contFrytkiState();
+}
+
+class _contFrytkiState extends State<contFrytki> {
+  final Stream<QuerySnapshot> _frytki =
+      FirebaseFirestore.instance.collection('Frytki').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _frytki,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+        
+        String a = {snapshot.data!.docs
+              .map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+                return data['Liczba'];
+              }).toString()}.join();
+        
+        counter= int.parse(a.split("(").removeLast().split(")").removeAt(0));
+
+        return Text((int.parse({snapshot.data!.docs
+              .map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+                return data['Liczba'];
+              })}.toString().split("{(").removeLast().split(")}").removeAt(0))*gender).toString(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange,
+                fontSize: 70
+                ),
+              );
+        
+        
+      },
+    );
+  }
+}
+
+class GetFryty extends StatelessWidget {
+  final String documentId;
+
+  GetFryty(this.documentId);
+  
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference frytki = FirebaseFirestore.instance.collection('Frytki');
+    return FutureBuilder<DocumentSnapshot>(
+      future: frytki.doc(documentId).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return const Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return const Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+          return Text("Liczba: ${data['Liczba']} ");
+        }
+
+        return const Text("loading");
+      },
+    );
+  }
+}
+
+class CheckFryty extends StatelessWidget {  
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return const Text("Error");
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Text("G");
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return const Text("Loading");
+      },
     );
   }
 }
