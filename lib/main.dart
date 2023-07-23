@@ -6,9 +6,9 @@ import 'firebase_options.dart';
 int counter = 0; 
 int toChange = 0;
 
-TextEditingController textController = TextEditingController(text: "Initial Text");
+TextEditingController textController = TextEditingController();
 
-int gender = -1;
+int gender = -1; //1= baba -1= chopek
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,12 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   // var db = FirebaseFirestore.instance;
   
-  void _genderSwap(){
-    if(gender==1){gender = 0;}
-    else{ gender = 1;}
-    print(gender);
-  }
-
   void _incrementCounter(int ile) {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -216,18 +210,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(height: 20),
-            // Text(
-            //   ((){
-            //     if(gender==1){ return 'Baba wisi tyle Fryt:'+ '$gender';}
-            //     else{ return 'Chopek wisi tyle Fryt'+ '$gender';}}
-            //     ())
-            //     ,
-            //   style: const TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.deepOrange,
-            //     fontSize: 30
-            //     ),
-            // ),
             const TextChanger(),
             
             
@@ -255,14 +237,14 @@ class TextChanger extends StatefulWidget {
 }
 class _TextChangerState extends State<TextChanger> {
   // Declare the variable
-  String dynamicText = 'Baba wisi tyle frytek:';
+  String dynamicText = 'Chopek wisi tyle frytek';
   updateText() {
     setState(() {
       if(gender==-1){
-        dynamicText = 'Chopek wisi tyle frytek';
+        dynamicText = 'Baba wisi tyle frytek';
         gender=1;
       }else{
-        dynamicText = 'Baba wisi tyle frytek:';
+        dynamicText = 'Chopek wisi tyle frytek';
         gender=-1;
       }
       
